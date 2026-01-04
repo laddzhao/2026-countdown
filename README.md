@@ -36,13 +36,13 @@
 
 ### 本地运行
 
-# 克隆仓库
+```
+克隆仓库
 git clone https://github.com/laddzhao/2026-countdown.git
-
-# 进入项目目录
+进入项目目录
 cd 2026-countdown
-
-# 直接在浏览器中打开index.html
+直接在浏览器中打开index.html
+```
 
 ### GitHub Pages 部署
 1. 将项目上传到GitHub仓库（名为2026-countdown）
