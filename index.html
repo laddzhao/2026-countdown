@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年春节倒计时 | 春节倒计时网站</title>
+    <meta name="description" content="2026年春节倒计时网站，实时显示距离2026年2月17日春节的时间，支持多种主题切换，包含福字烟花效果。">
+    <meta name="keywords" content="2026春节,春节倒计时,春节,倒计时,2026年,福字烟花,春节主题,2月17日">
+    <meta name="author" content="laddzhao">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #ff9800;
+            --background-color: #fef5f5;
+            --text-color: #333;
+            --accent-color: #ffeb3b;
+            --panel-color: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 var(--shadow-color);
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .theme-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .theme-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+        
+        .theme-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+        
+        .countdown-container {
+            background-color: var(--panel-color);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px var(--shadow-color);
+            margin: 30px auto;
+            max-width: 900px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .countdown-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 20px;
+            border-radius: 15px;
+            min-width: 150px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .countdown-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .countdown-label {
+            font-size: 1.3rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .spring-date {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 30px 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        /* 福字烟花效果 */
+        .fu-firework {
+            position: absolute;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            z-index: 0;
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+        
+        .fu-firework-1 {
+            bottom: 10%;
+            left: 15%;
+            animation: fuFirework 3s infinite ease-out;
+        }
+        
+        .fu-firework-2 {
+            bottom: 15%;
+            left: 25%;
+            animation: fuFirework 4s infinite ease-out;
+            animation-delay: 0.5s;
+            font-size: 3rem;
+            color: var(--secondary-color);
+        }
+        
+        .fu-firework-3 {
+            bottom: 8%;
+            left: 40%;
+            animation: fuFirework 3.5s infinite ease-out;
+            animation-delay: 1s;
+            font-size: 2.2rem;
+        }
+        
+        .fu-firework-4 {
+            bottom: 12%;
+            left: 60%;
+            animation: fuFirework 4.2s infinite ease-out;
+            animation-delay: 1.5s;
+            color: var(--accent-color);
+        }
+        
+        .fu-firework-5 {
+            bottom: 5%;
+            left: 75%;
+            animation: fuFirework 3.8s infinite ease-out;
+            animation-delay: 2s;
+            font-size: 2.8rem;
+        }
+        
+        .fu-firework-6 {
+            bottom: 18%;
+            left: 85%;
+            animation: fuFirework 4.5s infinite ease-out;
+            animation-delay: 2.5s;
+            font-size: 2.4rem;
+            color: var(--secondary-color);
+        }
+        
+        /* 更多福字烟花 */
+        .fu-firework-7 {
+            bottom: 25%;
+            left: 10%;
+            animation: fuFirework 3.2s infinite ease-out;
+            animation-delay: 3s;
+            font-size: 2.6rem;
+        }
+        
+        .fu-firework-8 {
+            bottom: 22%;
+            left: 30%;
+            animation: fuFirework 4s infinite ease-out;
+            animation-delay: 3.5s;
+            color: var(--accent-color);
+        }
+        
+        .fu-firework-9 {
+            bottom: 30%;
+            left: 50%;
+            animation: fuFirework 3.7s infinite ease-out;
+            animation-delay: 4s;
+            font-size: 3.2rem;
+        }
+        
+        .fu-firework-10 {
+            bottom: 28%;
+            left: 70%;
+            animation: fuFirework 4.3s infinite ease-out;
+            animation-delay: 4.5s;
+            font-size: 2.3rem;
+            color: var(--secondary-color);
+        }
+        
+        /* 福字烟花动画 */
+        @keyframes fuFirework {
+            0% {
+                transform: translateY(0) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+                text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--accent-color);
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .cloud {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .cloud-1 {
+            width: 120px;
+            height: 60px;
+            top: 5%;
+            left: 20%;
+            opacity: 0.7;
+        }
+        
+        .cloud-2 {
+            width: 150px;
+            height: 70px;
+            top: 10%;
+            right: 15%;
+            opacity: 0.6;
+        }
+        
+        .cloud-3 {
+            width: 100px;
+            height: 50px;
+            bottom: 10%;
+            left: 15%;
+            opacity: 0.5;
+        }
+        
+        /* 静态福字装饰 */
+        .fu-character {
+            position: absolute;
+            font-size: 4rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            opacity: 0.15;
+            transform: rotate(-15deg);
+            z-index: 0;
+        }
+        
+        .fu-1 {
+            top: 15%;
+            left: 8%;
+        }
+        
+        .fu-2 {
+            top: 10%;
+            right: 10%;
+            transform: rotate(15deg);
+        }
+        
+        .fu-3 {
+            bottom: 15%;
+            left: 12%;
+            transform: rotate(10deg);
+        }
+        
+        .fu-4 {
+            bottom: 10%;
+            right: 8%;
+            transform: rotate(-20deg);
+        }
+        
+        /* 春联装饰 */
+        .chunlian {
+            position: absolute;
+            width: 30px;
+            height: 120px;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            z-index: 0;
+        }
+        
+        /* .chunlian-left {
+            left: 5%;
+            top: 25%;
+        }
+        
+        .chunlian-right {
+            right: 5%;
+            top: 25%;
+        } */
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-color);
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 30px;
+        }
+        
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .countdown {
+                gap: 15px;
+            }
+            
+            .countdown-item {
+                min-width: 120px;
+                padding: 20px 15px;
+            }
+            
+            .countdown-value {
+                font-size: 3.5rem;
+            }
+            
+            .countdown-label {
+                font-size: 1.1rem;
+            }
+            
+            .theme-selector {
+                gap: 10px;
+            }
+            
+            .theme-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            /* 在小屏幕上减少福字烟花数量 */
+            .fu-firework-5,
+            .fu-firework-6,
+            .fu-firework-7,
+            .fu-firework-8,
+            .fu-firework-9,
+            .fu-firework-10 {
+                display: none;
+            }
+            
+            .fu-character, .chunlian {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .countdown-item {
+                min-width: 80px;
+                padding: 15px 10px;
+            }
+            
+            .countdown-value {
+                font-size: 2.5rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .countdown-title {
+                font-size: 1.7rem;
+            }
+            
+            .spring-date {
+                font-size: 1.3rem;
+            }
+            
+            /* 在更小的屏幕上进一步减少福字烟花 */
+            .fu-firework-3,
+            .fu-firework-4 {
+                display: none;
+            }
+            
+            .fu-firework {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* 主题样式 */
+        /* 传统红色主题 - 默认 */
+        .theme-traditional {
+            --primary-color: #d32f2f;
+            --secondary-color: #ff9800;
+            --background-color: #fef5f5;
+            --text-color: #333;
+            --accent-color: #ffeb3b;
+            --panel-color: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 现代金色主题 */
+        .theme-modern {
+            --primary-color: #d4af37;
+            --secondary-color: #c19a6b;
+            --background-color: #1a1a1a;
+            --text-color: #f5f5f5;
+            --accent-color: #ffd700;
+            --panel-color: #2a2a2a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 水墨风格主题 */
+        .theme-ink {
+            --primary-color: #000000;
+            --secondary-color: #666666;
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --accent-color: #8b4513;
+            --panel-color: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 蓝调主题 */
+        .theme-blue {
+            --primary-color: #1e88e5;
+            --secondary-color: #42a5f5;
+            --background-color: #e3f2fd;
+            --text-color: #0d47a1;
+            --accent-color: #ffd54f;
+            --panel-color: #fff;
+            --shadow-color: rgba(30, 136, 229, 0.2);
+        }
+        
+        /* 新春绿意主题 */
+        .theme-green {
+            --primary-color: #2e7d32;
+            --secondary-color: #4caf50;
+            --background-color: #f1f8e9;
+            --text-color: #1b5e20;
+            --accent-color: #ffb300;
+            --panel-color: #fff;
+            --shadow-color: rgba(46, 125, 50, 0.2);
+        }
+    </style>
+</head>
+<body class="theme-traditional">
+    <!-- 装饰元素 -->
+    <div class="decorations">
+        <!-- 福字烟花效果 -->
+        <div class="fu-firework fu-firework-1">福</div>
+        <div class="fu-firework fu-firework-2">福</div>
+        <div class="fu-firework fu-firework-3">福</div>
+        <div class="fu-firework fu-firework-4">福</div>
+        <div class="fu-firework fu-firework-5">福</div>
+        <div class="fu-firework fu-firework-6">福</div>
+        <div class="fu-firework fu-firework-7">福</div>
+        <div class="fu-firework fu-firework-8">福</div>
+        <div class="fu-firework fu-firework-9">福</div>
+        <div class="fu-firework fu-firework-10">福</div>
+        
+        <!-- 其他装饰元素 -->
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        
+        <!-- 静态福字装饰 -->
+        <div class="fu-character fu-1">福</div>
+        <div class="fu-character fu-2">福</div>
+        <div class="fu-character fu-3">春</div>
+        <div class="fu-character fu-4">春</div>
+        
+        <!-- 春联装饰 -->
+        <!-- <div class="chunlian chunlian-left"></div>
+        <div class="chunlian chunlian-right"></div> -->
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>2026年春节倒计时</h1>
+            <div class="subtitle">农历丙午年 · 金马迎春 · 阖家欢乐</div>
+            
+            <!-- 主题选择器 -->
+            <div class="theme-selector">
+                <button class="theme-btn active" data-theme="traditional">
+                    <i class="fas fa-fire"></i> 传统红火
+                </button>
+                <button class="theme-btn" data-theme="modern">
+                    <i class="fas fa-gem"></i> 现代金耀
+                </button>
+                <button class="theme-btn" data-theme="ink">
+                    <i class="fas fa-paint-brush"></i> 水墨丹青
+                </button>
+                <button class="theme-btn" data-theme="blue">
+                    <i class="fas fa-snowflake"></i> 冰雪蓝调
+                </button>
+                <button class="theme-btn" data-theme="green">
+                    <i class="fas fa-leaf"></i> 新春绿意
+                </button>
+            </div>
+        </header>
+        
+        <main>
+            <div class="countdown-container">
+                <div class="countdown-title">
+                    <i class="fas fa-hourglass-half"></i>
+                    距离2026年春节还有
+                </div>
+                
+                <div class="spring-date">
+                    2026年春节：2026年2月17日（星期二）· 农历正月初一
+                </div>
+                
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="days">00</div>
+                        <div class="countdown-label">天</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="hours">00</div>
+                        <div class="countdown-label">小时</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <div class="countdown-label">分钟</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+                
+                <div class="spring-date" style="font-size: 1.4rem; margin-top: 20px;">
+                    <i class="fas fa-horse"></i> 2026年是农历丙午年（马年）
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025-2026 2026春节倒计时 | 作者：<span class="highlight">laddzhao</span></p>
+            <p>祝福您和您的家人：<span class="highlight">马到成功 · 万事如意 · 阖家幸福 · 新春大吉</span></p>
+            <p style="margin-top: 15px; font-size: 0.9rem;">
+                <a href="https://github.com/laddzhao/2026-countdown" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                    <i class="fab fa-github"></i> GitHub项目地址
+                </a>
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        // 设置2026年春节日期：2026年2月17日（星期二）
+        const springFestivalDate = new Date('2026-02-17T00:00:00');
+        
+        // 更新倒计时
+        function updateCountdown() {
+            const now = new Date();
+            const timeDifference = springFestivalDate - now;
+            
+            // 如果春节已经过了
+            if (timeDifference < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            
+            // 计算剩余的天、小时、分钟和秒
+            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+            
+            // 更新显示
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // 初始化倒计时
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // 主题切换功能
+        document.querySelectorAll('.theme-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的active类
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 给当前点击的按钮添加active类
+                this.classList.add('active');
+                
+                // 获取主题名称
+                const theme = this.getAttribute('data-theme');
+                
+                // 移除现有主题类并添加新主题类
+                document.body.className = '';
+                document.body.classList.add(`theme-${theme}`);
+                
+                // 保存主题到本地存储
+                localStorage.setItem('2026-countdown-theme', theme);
+            });
+        });
+        
+        // 页面加载时恢复保存的主题
+        window.addEventListener('load', function() {
+            const savedTheme = localStorage.getItem('2026-countdown-theme');
+            if (savedTheme) {
+                // 移除所有按钮的active类
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 激活保存的主题按钮
+                const activeButton = document.querySelector(`[data-theme="${savedTheme}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+                
+                // 应用保存的主题
+                document.body.className = '';
+                document.body.classList.add(`theme-${savedTheme}`);
+            }
+        });
+        
+        // 添加一些春节祝福语
+        const blessings = [
+            "金马迎春，万象更新",
+            "马到成功，前程似锦",
+            "年年有余，岁岁平安",
+            "福星高照，万事如意",
+            "新春快乐，阖家幸福"
+        ];
+        
+        // 随机显示祝福语
+        function showRandomBlessing() {
+            const blessingElement = document.querySelector('.subtitle');
+            if (blessingElement) {
+                const randomIndex = Math.floor(Math.random() * blessings.length);
+                blessingElement.textContent = blessings[randomIndex];
+                
+                // 每隔10秒更换一次祝福语
+                setInterval(() => {
+                    const newIndex = Math.floor(Math.random() * blessings.length);
+                    blessingElement.textContent = blessings[newIndex];
+                }, 10000);
+            }
+        }
+        
+        // 页面加载完成后显示随机祝福语
+        window.addEventListener('load', showRandomBlessing);
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.countdown-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // 动态生成更多福字烟花
+        function createFuFireworks() {
+            const decorations = document.querySelector('.decorations');
+            
+            // 如果已经有足够的福字烟花，就不再创建
+            if (document.querySelectorAll('.fu-firework').length >= 10) return;
+            
+            // 创建额外的福字烟花
+            for (let i = 11; i <= 16; i++) {
+                const fu = document.createElement('div');
+                fu.className = `fu-firework fu-firework-${i}`;
+                fu.textContent = '福';
+                
+                // 随机位置
+                const left = Math.random() * 90 + 5; // 5% 到 95%
+                const bottom = Math.random() * 20 + 5; // 5% 到 25%
+                
+                // 随机动画参数
+                const duration = Math.random() * 2 + 3; // 3到5秒
+                const delay = Math.random() * 5; // 0到5秒延迟
+                const fontSize = Math.random() * 1 + 2; // 2到3rem
+                const colorIndex = Math.floor(Math.random() * 3);
+                const colors = ['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)'];
+                
+                // 应用样式
+                fu.style.left = `${left}%`;
+                fu.style.bottom = `${bottom}%`;
+                fu.style.fontSize = `${fontSize}rem`;
+                fu.style.color = colors[colorIndex];
+                fu.style.animation = `fuFirework ${duration}s infinite ease-out`;
+                fu.style.animationDelay = `${delay}s`;
+                
+                decorations.appendChild(fu);
+            }
+        }
+        
+        // 页面加载后创建动态福字烟花
+        window.addEventListener('load', () => {
+            // 等一会儿再创建额外的福字烟花
+            setTimeout(createFuFireworks, 2000);
+            
+            // 每隔一段时间重新创建一些福字烟花
+            setInterval(() => {
+                // 随机移除一些福字烟花
+                const fuFireworks = document.querySelectorAll('.fu-firework');
+                if (fuFireworks.length > 15) {
+                    const removeCount = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < removeCount && i < fuFireworks.length; i++) {
+                        if (fuFireworks[i].className.includes('fu-firework-1') || 
+                            fuFireworks[i].className.includes('fu-firework-2') ||
+                            fuFireworks[i].className.includes('fu-firework-3') ||
+                            fuFireworks[i].className.includes('fu-firework-4') ||
+                            fuFireworks[i].className.includes('fu-firework-5') ||
+                            fuFireworks[i].className.includes('fu-firework-6') ||
+                            fuFireworks[i].className.includes('fu-firework-7') ||
+                            fuFireworks[i].className.includes('fu-firework-8') ||
+                            fuFireworks[i].className.includes('fu-firework-9') ||
+                            fuFireworks[i].className.includes('fu-firework-10')) {
+                            // 保留前10个固定的福字烟花
+                            continue;
+                        }
+                        fuFireworks[i].remove();
+                    }
+                }
+                
+                // 创建新的福字烟花
+                createFuFireworks();
+            }, 8000);
+        });
+    </script>
+</body>
+</html>
