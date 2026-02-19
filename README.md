@@ -15,7 +15,7 @@
 
 ## 在线演示
 
-访问 [GitHub Pages 演示](https://laddzhao.github.io/2026-countdown/) 查看在线效果
+访问 [GitHub Pages 演示](https://zlyup.github.io/2026-countdown/) 查看在线效果
 
 ## 项目结构
 
@@ -38,7 +38,7 @@
 
 ```
 克隆仓库
-git clone https://github.com/laddzhao/2026-countdown.git
+git clone https://github.com/zlyup/2026-countdown.git
 进入项目目录
 cd 2026-countdown
 直接在浏览器中打开index.html
@@ -50,7 +50,7 @@ cd 2026-countdown
 3. 找到 "Pages" 选项
 4. 选择主分支 (main/master) 作为源
 5. 保存设置，等待部署完成
-6. 访问 https://laddzhao.github.io/2026-countdown/
+6. 访问 https://zlyup.github.io/2026-countdown/
 
 ## 技术栈
 - HTML5
@@ -92,8 +92,8 @@ cd 2026-countdown
 - 欢迎提交 Issue 和 Pull Request 来改进项目！
 
 ## 联系方式
-- GitHub: [laddzhao](https://github.com/laddzhao)
-- 项目地址: https://github.com/laddzhao/2026-countdown
+- GitHub: [zlyup](https://github.com/zlyup)
+- 项目地址: https://github.com/zlyup/2026-countdown
 
 ## 致谢
 - 感谢 Font Awesome 提供的图标
